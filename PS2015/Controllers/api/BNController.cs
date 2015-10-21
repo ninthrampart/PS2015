@@ -11,12 +11,14 @@ namespace PS2015.Controllers.api
 {
     public class BNController : ApiController
     {
-        public List<BNSumModel> Get(int id)
+        [HttpGet]
+        [Route("api/BN/Get/{psid}")]
+        public List<BNSumModel> Get(int psid)
         {
 
             IBNSumModelRepository rep = new BNSumModelFakeRepository();
 
-            return rep.Get(id);
+            return rep.Get(psid);
         }
     }
 }

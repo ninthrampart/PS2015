@@ -3,7 +3,7 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index!!!!!</h2>
+<h2>Паспорт сделки</h2>
 
 <script type="text/javascript">
     var app = new Backbone.Marionette.Application();
@@ -45,24 +45,35 @@
     });
 
     BNCountView = Backbone.Marionette.ItemView.extend({
+        template: "#ps_bncountitem",
+        tagName: 'tr',
+        className: 'ps_bncountitem'
+        
+    });
+
+    BNCountCollectionView = Backbone.Marionette.CompositeView.extend({
         template: "#ps_bncount",
         className: 'ps_bncount',
+        childView: BNCountView,
+        childViewContainer: "tbody"
     });
 
     app.addInitializer(function (options) {
 
         //alert("ok");
         //debugger;
-        var cPS = options.currentPS;
+        var cPS = options.passport;
 
         var subView = new PSView({
             model: cPS
         });
 
-        var bncountSubview = new BNCountView({
+        //var bncountSubview = new BNCountView({
 
+        //});
+        var bnCountCollectionView = new BNCountCollectionView({
+            collection: options.bnsumlists
         });
-
 
         var layout = new LayoutView();
         app.startRegion.show(layout);
@@ -70,7 +81,7 @@
         app.currLayout = layout;
 
         subView.render().$el.appendTo("#ps_data");
-        bncountSubview.render().$el.appendTo("#ps_data");
+        bnCountCollectionView.render().$el.appendTo("#ps_data");
     });
 
 
@@ -86,39 +97,36 @@
 
         //jQuery.when.apply(jQuery, complete).done(function () {
         //    alert("done");
+        
+
+
+        //debugger;
+        //app.ps.fetch({
+        //    async: false
         //});
-        debugger;
-        app.ps.fetch({
-            async: false
-        });
 
-        debugger;
+        //debugger;
 
-        app.bnsumlists.fetch({
-            async: false
-        });
-        debugger;
+        //app.bnsumlists.fetch({
+        //    async: false
+        //});
+        //debugger;
 
-        app.start({ passport: app.ps, bnsumlists: app.bnsumlists });
+        //app.start({ passport: app.ps, bnsumlists: app.bnsumlists });
+
+        //debugger;
         // фетч по 2м коллекциям одновременно - чтобы коллбек зарегистрировать
-        //var complete = _.invoke([app.bnsumlists], 'fetch');
+        var complete = _.invoke([app.ps, app.bnsumlists], 'fetch');
 
         
 
         //app.start({ currentPS: app.ps });
 
         //фетч завершен
-        //jQuery.when.apply(jQuery, complete).done(function () {
-        //    //all ready and good to go...
+        jQuery.when.apply(jQuery, complete).done(function () {           
+            app.start({ passport: app.ps, bnsumlists: app.bnsumlists });
 
-
-
-
-
-        //    debugger;
-        //    app.start({ passport: app.ps, bnsumlists: app.bnsumlists });
-
-        //});
+        });
     });
 </script>
 
@@ -129,11 +137,6 @@
 
 <script type="text/template" id="layout_template">
     <div id="ps_data">
-        no data
-        
-
-
-
     </div>
 </script>
 
@@ -195,7 +198,7 @@
 <script type="text/template" id="ps_bncount">
     <div class="row">
         <div class="col-lg-7">
-            <table class="table table-hover table-bordered">
+            <table id="tbl_ps_bncount" class="table table-hover table-bordered">
                 <thead>
                     <tr>
                         <th colspan="7">Расчет по БН</th>
@@ -214,9 +217,20 @@
                         <th>Плановая, %</th>
                     </tr>
                 </thead>
+                <tbody></tbody>
             </table>
         </div>
 
     </div>
+</script>
+
+<script type="text/template" id="ps_bncountitem">
+    <td><%- BN %></td>
+    <td><%- BNSumma %></td>
+    <td><%- Marga %></td>
+    <td><%- Original_Marga_Percent %></td>
+    <td><%- Marga_Percent %></td>
+    <td>-</td>
+    <td>-</td>
 </script>
 

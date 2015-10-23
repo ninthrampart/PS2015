@@ -39,8 +39,25 @@
         url: "/api/BN/Get/123"
     });
 
+
+
+    app.ExecInfo = Backbone.Model.extend({
+
+    });
+
+    app.ExecInfoList = Backbone.Collection.extend({
+        model: app.ExecInfo,
+        url: "/api/BN/Get/123"
+    });
+
+    ExecInfoView = Backbone.Marionette.ItemView.extend({
+        template: "#ps_execinfo",
+        //tagName: "tr",
+        className: 'ps_execinfo',
+    });
+
     PSView = Backbone.Marionette.ItemView.extend({
-        template: "#ps_maininfo",
+        template: "#ps_maininfo",        
         className: 'ps_maininfo',
     });
 
@@ -57,6 +74,13 @@
         childView: BNCountView,
         childViewContainer: "tbody"
     });
+
+    //ExecInfoCollectionView = Backbone.Marionette.CompositeView.extend({
+    //    template: "#ps_execinfo",
+    //    className: 'ps_execinfo',
+    //    childView: ExecInfoView,
+    //    childViewContainer: "tbody"
+    //});
 
     app.addInitializer(function (options) {
 
@@ -75,6 +99,14 @@
             collection: options.bnsumlists
         });
 
+        //var execInfoCollectionView = new ExecInfoCollectionView({
+        //    collection: options.execinfolists
+        //});
+
+        var execInfoView = new ExecInfoView({
+            model: cPS
+        });
+
         var layout = new LayoutView();
         app.startRegion.show(layout);
 
@@ -82,6 +114,8 @@
 
         subView.render().$el.appendTo("#ps_data");
         bnCountCollectionView.render().$el.appendTo("#ps_data");
+        //execInfoCollectionView.render().$el.appendTo("#ps_data");
+        execInfoView.render().$el.appendTo("#ps_data");
     });
 
 
@@ -124,7 +158,7 @@
 
         //фетч завершен
         jQuery.when.apply(jQuery, complete).done(function () {           
-            app.start({ passport: app.ps, bnsumlists: app.bnsumlists });
+            app.start({ passport: app.ps, bnsumlists: app.bnsumlists});
 
         });
     });
@@ -143,7 +177,39 @@
 <script type="text/template" id="ps_maininfo">
 
     <div class="row">
-        <div class="col-lg-7">
+        <div class="col-lg-3">
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr><th colspan="2">Основные данные сделки</th></tr>
+                </thead>
+                <tr>
+                    <td>Заказчик</td>
+                    <td><%- Client %></td>
+                </tr>
+                <tr>
+                    <td>Юр. лицо</td>
+                    <td><%- Account %></td>
+                </tr>
+                <tr>
+                    <td>Номер сделки</td>
+                    <td><%- BargainNumber %></td>
+                </tr>
+                <tr>
+                    <td>ГМП</td>
+                    <td><%- GMP %></td>
+                </tr>
+                <tr>
+                    <td>ГИП</td>
+                    <td><%- GIP %></td>
+                </tr>
+                <tr>
+                    <td>Продавец</td>
+                    <td><%- Prodavec %></td>
+                </tr>
+            </table>
+
+        </div>
+        <div class="col-lg-5">
 
             <table class="table table-hover table-bordered">
                 <thead>
@@ -192,6 +258,63 @@
             </table>
 
         </div>
+
+        <div class="col-lg-4">
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th colspan="2">Сроки по договору</th>
+                    </tr>
+                </thead>
+                <tr>
+                    <td>Длительность сделки, календарных дней</td>
+                    <td><%- Duration %></td>
+                </tr>
+                <tr>
+                    <td>Поставка оборудования, календарных дней</td>
+                    <td><%- DeliveryDuration %></td>
+                </tr>
+                
+            </table>
+
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th colspan="2">Условия оплаты по договору</th>
+                    </tr>
+                </thead>
+                <tr>
+                    <td>Аванс, руб.</td>
+                    <td><%- Avans %></td>
+                </tr>
+                <tr>
+                    <td>Платеж, руб.</td>
+                    <td><span id="l_Pay"><%- Pay %> руб.</span></td>
+                </tr>
+
+            </table>
+        </div>
+
+    </div>
+    <div class="row">
+        <div  class="col-lg-12">
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th colspan="3">Сроки по договору</th>
+                    </tr>
+                </thead>
+                <tr>
+                    <td>Распределение, %</td>
+                    <td colspan="2">-</td>
+                </tr>
+                <tr>
+                    <td>Размер</td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
+            </table>
+        </div>
     </div>
 </script>
 
@@ -232,5 +355,75 @@
     <td><%- Marga_Percent %></td>
     <td>-</td>
     <td>-</td>
+</script>
+
+<script type="text/template" id="ps_execinfo">
+    <div class="row">
+        <div class="col-lg-12">
+            <table id="tbl_ps_execinfo" class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th colspan="8">Затраты на исполнение</th>
+                    </tr>
+                    <tr>
+                        <th rowspan="2">
+                            Прочие расходы по сделке, руб.
+                        </th>
+                        <th rowspan="2">
+                            Комиссия за транзитную сделку, руб.
+                        </th>
+                        <th colspan="2">
+                            Расходы по кредиту
+                        </th>
+                        <th colspan="2">
+                            Расходы на банковское обслуживание сделки
+                        </th>
+                        <th colspan="2">
+                            Дополнительные отчисления по НС
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            %
+                        </th>
+                        <th>
+                            руб.
+                        </th>
+                        <th>
+                            %
+                        </th>
+                        <th>
+                            руб.
+                        </th>
+                        <th>
+                            %
+                        </th>
+                        <th>
+                            руб.
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><%- Risks %></td>
+                        <td><span id="l_opportunity_commission"><%- Transit %></span></td>
+                        <td><span id="l_credit_percent"><%- Credit_Percent %></span></td>
+                        <td><span id="l_credit"><%- Credit %></span></td>
+                        <td><span id="l_bank_percent"><%- Bank_Percent %></span></td>
+                        <td><span id="l_bank"><%- Bank %></span></td>
+                        <td><span id="l_NS_percent"><%- NalogNS_Percent %></span></td>
+                        <td><span id="l_NS"><%- NalogNS %></span>
+                            <span id="l_warranty_cost"><%- WarrantyCost %></span></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="7">Всего затрат на исполнение включая командировочные и транспортные расходы</td>
+                        <td><span id="l_total_exec_cost"><%- TotalDopCost %></span></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
 </script>
 

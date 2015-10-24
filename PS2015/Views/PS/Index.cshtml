@@ -25,6 +25,29 @@
         startRegion: "#big_papa"
     });
 
+    //app.SubctontractWorkItem = Backbone.Model.extend({
+
+    //});
+
+    //app.SubctontractWorkList = Backbone.Collection.extend({
+    //    model: app.SubctontractWorkItem,
+    //    url: "/api/Work/GetForPassport/123"
+    //});
+
+    //SubctontractWorkView = Backbone.Marionette.ItemView.extend({
+    //    template: "#ps_subcontractwork",
+    //    tagName: 'tr',
+    //    className: 'ps_subcontractwork'
+
+    //});
+
+    //SubctontractWorkLisView = Backbone.Marionette.CompositeView.extend({
+    //    template: "#ps_subcontractworks",
+    //    className: 'ps_subcontractworks',
+    //    childView: SubctontractWorkView,
+    //    childViewContainer: "tbody"
+    //});
+
     app.addInitializer(function (options) {
 
         //alert("ok");
@@ -58,6 +81,10 @@
             collection: options.works
         });
 
+        var subcontractworkLisView = new SubctontractWorkLisView({
+            collection: options.works
+        });
+
         var layout = new LayoutView();
         app.startRegion.show(layout);
 
@@ -69,6 +96,7 @@
         execInfoView.render().$el.appendTo("#ps_data");
         vendorLisView.render().$el.appendTo("#ps_data");
         internalworkLisView.render().$el.appendTo("#ps_data");
+        subcontractworkLisView.render().$el.appendTo("#ps_data");
     });
 
 
@@ -389,10 +417,10 @@
             <table id="tbl_ps_vendors" class="table table-hover table-bordered">
                 <thead>
                     <tr>
-                        <th colspan="10">ТМЦ, НПИ</th>
+                        <th colspan="11">ТМЦ, НПИ</th>
                     </tr>
                     <tr>
-                        <th rowspan="2">Поставщик</th>
+                        <th rowspan="2" colspan="2">Поставщик</th>
                         <th rowspan="2">Стоимость для заказчика, руб.</th>
                         <th rowspan="2">Стоимость для АйТи, руб.</th>
                         <th rowspan="2">Срок кредитования</th>
@@ -432,6 +460,10 @@
                         </td>
                         <td colspan="2"></td>
                     </tr>
+                    <tr>
+                        <td colspan="1"><img class="addvendor" class="deletevendor" src="../../Content/Images/add.gif" /></td>
+                        <td colspan="10">Добавить новую строку</td>
+                    </tr>
                 </tfoot>
             </table>
         </div>
@@ -439,8 +471,23 @@
     </div>
 </script>
 
+<script type="text/template" id="ps_vendoradd">
+    <td><img class="deletevendor" src="../../Content/Images/delete.png" /></td>
+    <td><input type="text" /></td>
+    <td><input type="text" /></td>
+    <td><input type="text" /></td>
+    <td><input type="text" /></td>
+    <td><input type="text" /></td>
+    <td>Не реализовано</td>
+    <td>Не реализовано</td>
+    <td><input type="text" /></td>
+    <td><input type="text" /></td>
+    <td><input type="text" /></td>
+</script>
+
 <script type="text/template" id="ps_vendor">
-    <td><%- VendorName %></td>
+    <td><img class="deletevendor" src="../../Content/Images/delete.png" /></td>
+    <td><input type="text" value="<%- VendorName %>" /></td>
     <td><%- Cost %></td>
     <td><%- Buy %></td>
     <td><%- SrokKredit %></td>
@@ -516,5 +563,51 @@
     <td><%- Marga_Percent %></td>
     <td><%- BN %></td>
     <td><%- Comments %></td>
+</script>
+
+<script type="text/template" id="ps_subcontractworks">
+    <div class="row">
+        <div class="col-lg-12">
+            <table id="tbl_ps_internalworks" class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th colspan="11">Субподрядные работы</th>
+                    </tr>
+                    <tr>
+                        <th rowspan="2">Наименование работ</th>
+                        <th rowspan="2">Исполнитель</th>
+                        <th rowspan="2">Стоимость для заказчика, руб.</th>
+                        <th rowspan="2">Вид работ</th>
+                        <th rowspan="2">Стоимость для АйТи, руб.</th>
+                        <th rowspan="2">Налог</th>
+                        <th colspan="2">Рентабельность</th>
+                        <th rowspan="2">БН</th>
+                        <th rowspan="2">Тип работ</th>
+                        <th rowspan="2">Примечание</th>
+                    </tr>
+                    <tr>
+                        <th>руб.</th>
+                        <th>%</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</script>
+
+<script type="text/template" id="ps_subcontractwork">
+    <td><span><%- WorksName %></span></td>
+    <td><span><%- Executor %></span></td>
+    <td><span><%- Cost %></span></td>
+    <td><span><%- ResType %></span></td>
+    <td><span><%- Buy %></span></td>
+    <td><span><%- Nalog %></span></td>
+    <td><span><%- Marga %></span></td>
+    <td><span><%- Marga_Percent %></span></td>
+    <td><span><%- BN %></span></td>
+    <td><span><%- WorkType %></span></td>
+    <td><span><%- Comments %></span></td>
 </script>
 

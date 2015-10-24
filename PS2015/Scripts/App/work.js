@@ -20,3 +20,17 @@ InternalWorkLisView = Backbone.Marionette.CompositeView.extend({
     childView: InternalWorkView,
     childViewContainer: "tbody"
 });
+
+SubctontractWorkView = Backbone.Marionette.ItemView.extend({
+    template: "#ps_subcontractwork",
+    tagName: 'tr',
+    className: 'ps_subcontractwork'
+
+});
+
+SubctontractWorkLisView = Backbone.Marionette.CompositeView.extend({
+    template: "#ps_subcontractworks",
+    className: 'ps_subcontractworks',
+    childView: SubctontractWorkView,
+    childViewContainer: "tbody"
+});

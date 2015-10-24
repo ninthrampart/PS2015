@@ -133,6 +133,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\api\BNController.cs" />
     <Compile Include="Controllers\api\PassportController.cs" />
+    <Compile Include="Controllers\api\VendorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PSController.cs" />
     <Compile Include="Global.asax.cs">
@@ -142,10 +143,16 @@
     <Compile Include="Models\BNSumModel.cs" />
     <Compile Include="Models\Fake\BNSumModelFakeRepository.cs" />
     <Compile Include="Models\Fake\PSFakeRepository.cs" />
+    <Compile Include="Models\Fake\VendorModelFakeRepository.cs" />
+    <Compile Include="Models\Fake\WorkModelFakeRepository.cs" />
     <Compile Include="Models\IBNSumModelRepository.cs" />
     <Compile Include="Models\IPSRepository.cs" />
+    <Compile Include="Models\IVendorModelRepository.cs" />
+    <Compile Include="Models\IWorkModelRepository.cs" />
     <Compile Include="Models\PS.cs" />
     <Compile Include="Models\PSBase.cs" />
+    <Compile Include="Models\VendorModel.cs" />
+    <Compile Include="Models\WorkModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -164,6 +171,11 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Scripts\App\app.js" />
+    <Content Include="Scripts\App\BNSumma.js" />
+    <Content Include="Scripts\App\execinfo.js" />
+    <Content Include="Scripts\App\ps.js" />
+    <Content Include="Scripts\App\vendor.js" />
     <Content Include="Scripts\backbone.js" />
     <Content Include="Scripts\backbone.marionette.js" />
     <Content Include="Scripts\backbone.marionette.min.js" />

@@ -6,7 +6,7 @@
 <h2>Паспорт сделки</h2>
 
 <script type="text/javascript">
-    var app = new Backbone.Marionette.Application();
+    //var app = new Backbone.Marionette.Application();
 
     var LayoutView = Backbone.Marionette.LayoutView.extend({
         template: "#layout_template",
@@ -25,62 +25,14 @@
         startRegion: "#big_papa"
     });
 
-
-    app.PS = Backbone.Model.extend({
-        url: "/api/Passport/123"
-    });
-
-    app.BNSumList = Backbone.Model.extend({
-        
-    });
-
-    app.BNSumLists = Backbone.Collection.extend({
-        model: app.BNSumList,
-        url: "/api/BN/Get/123"
-    });
-
-
-
-    app.ExecInfo = Backbone.Model.extend({
+    app.WorkItem = Backbone.Model.extend({
 
     });
 
-    app.ExecInfoList = Backbone.Collection.extend({
-        model: app.ExecInfo,
-        url: "/api/BN/Get/123"
+    app.WorkList = Backbone.Collection.extend({
+        model: app.VendorItem,
+        url: "/api/Vendor/Get/123"
     });
-
-    ExecInfoView = Backbone.Marionette.ItemView.extend({
-        template: "#ps_execinfo",
-        //tagName: "tr",
-        className: 'ps_execinfo',
-    });
-
-    PSView = Backbone.Marionette.ItemView.extend({
-        template: "#ps_maininfo",        
-        className: 'ps_maininfo',
-    });
-
-    BNCountView = Backbone.Marionette.ItemView.extend({
-        template: "#ps_bncountitem",
-        tagName: 'tr',
-        className: 'ps_bncountitem'
-        
-    });
-
-    BNCountCollectionView = Backbone.Marionette.CompositeView.extend({
-        template: "#ps_bncount",
-        className: 'ps_bncount',
-        childView: BNCountView,
-        childViewContainer: "tbody"
-    });
-
-    //ExecInfoCollectionView = Backbone.Marionette.CompositeView.extend({
-    //    template: "#ps_execinfo",
-    //    className: 'ps_execinfo',
-    //    childView: ExecInfoView,
-    //    childViewContainer: "tbody"
-    //});
 
     app.addInitializer(function (options) {
 
@@ -107,6 +59,10 @@
             model: cPS
         });
 
+        var vendorLisView = new VendorLisView({
+            collection: options.vendors
+        });
+
         var layout = new LayoutView();
         app.startRegion.show(layout);
 
@@ -116,6 +72,7 @@
         bnCountCollectionView.render().$el.appendTo("#ps_data");
         //execInfoCollectionView.render().$el.appendTo("#ps_data");
         execInfoView.render().$el.appendTo("#ps_data");
+        vendorLisView.render().$el.appendTo("#ps_data");
     });
 
 
@@ -126,6 +83,7 @@
         
         app.ps = new app.PS({ id: psId });
         app.bnsumlists = new app.BNSumLists();
+        app.vendors = new app.VendorList();
 
         //var complete = _.invoke([app.ps], 'fetch');
 
@@ -141,7 +99,7 @@
 
         //debugger;
 
-        //app.bnsumlists.fetch({
+        //app.vendors.fetch({
         //    async: false
         //});
         //debugger;
@@ -150,15 +108,16 @@
 
         //debugger;
         // фетч по 2м коллекциям одновременно - чтобы коллбек зарегистрировать
-        var complete = _.invoke([app.ps, app.bnsumlists], 'fetch');
+        var complete = _.invoke([app.ps, app.bnsumlists, app.vendors], 'fetch');
 
         
 
         //app.start({ currentPS: app.ps });
 
         //фетч завершен
-        jQuery.when.apply(jQuery, complete).done(function () {           
-            app.start({ passport: app.ps, bnsumlists: app.bnsumlists});
+        jQuery.when.apply(jQuery, complete).done(function () {
+            //debugger;
+            app.start({ passport: app.ps, bnsumlists: app.bnsumlists, vendors: app.vendors});
 
         });
     });
@@ -425,5 +384,140 @@
             </table>
         </div>
     </div>
+</script>
+
+<script type="text/template" id="ps_vendors">
+    <div class="row">
+        <div class="col-lg-7">
+            <table id="tbl_ps_vendors" class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th colspan="10">ТМЦ, НПИ</th>
+                    </tr>
+                    <tr>
+                        <th rowspan="2">Поставщик</th>
+                        <th rowspan="2">Стоимость для заказчика, руб.</th>
+                        <th rowspan="2">Стоимость для АйТи, руб.</th>
+                        <th rowspan="2">Срок кредитования</th>
+                        <th rowspan="2">Расходы по кредиту, руб</th>
+                        <th colspan="2">Рентабельность</th>
+                        <th rowspan="2">БН</th>
+                        <th rowspan="2">Транспортные расходы, руб</th>
+                        <th rowspan="2">Примечание</th>
+                    </tr>
+                    <tr>
+                        <th>руб.</th>
+                        <th>%</th>                        
+                    </tr>
+                </thead>
+                <tbody></tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="2">
+                            Итоговые значения
+                        </th>
+                        <td>
+                            <span id="TotalProdCostLiteral">-</span>
+                        </td>
+                        <td>
+                            <span id="TotalProdBuyLiteral">-</span>
+                        </td>
+                        <td>
+                            <span id="TotalDeliveryCostLiteral">-</span>
+                        </td>
+                        <td><span>-</span></td>
+                        <td></td>
+                        <td>
+                            <span id="TotalProdMargaLiteral">-</span>
+                        </td>
+                        <td>
+                            <span id="TotalProdMargaPercentLiteral">-</span>
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+    </div>
+</script>
+
+<script type="text/template" id="ps_vendor">
+    <td><%- VendorName %></td>
+    <td><%- Cost %></td>
+    <td><%- Buy %></td>
+    <td><%- SrokKredit %></td>
+    <td><%- RasxodKredit %></td>
+    <td>Не реализовано</td>
+    <td>Не реализовано</td>
+    <td><%- BN %></td>
+    <td><%- DeliveryCost %></td>
+    <td><%- Comments %></td>
+</script>
+
+<script type="text/template" id="ps_internalworks">
+    <div class="row">
+        <div class="col-lg-12">
+            <table id="tbl_ps_vendors" class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th colspan="9">Работы внутренних ресурсов</th>
+                    </tr>
+                    <tr>
+                        <th rowspan="2">Наименование работ</th>
+                        <th rowspan="2">Стоимость для заказчика, руб.</th>
+                        <th colspan="2">Стоимость для АйТи, руб.</th>
+                        <th rowspan="2">Командировочные расходы, руб.</th>
+                        <th colspan="2">Рентабельность</th>
+                        <th rowspan="2">БН</th>
+                        <th rowspan="2">Примечание</th>
+                    </tr>
+                    <tr>
+                        <th>Для ФР</th>
+                        <th>Для ПМП</th>
+                        <th>руб.</th>
+                        <th>%</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+                <tfoot>
+                    <tr>
+                       <td>Итого</td>
+                       <td>-</td>
+                       <td>-</td>
+                       <td>-</td>
+                       <td>-</td>
+                       <td>-</td>
+                       <td></td>
+                       <td></td>
+                       <td></td>
+                    </tr>
+                    <tr>
+                        <td>Стоимость ресурсов из плана проекта  MSP</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</script>
+
+<script type="text/template" id="ps_internalwork">
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
 </script>
 

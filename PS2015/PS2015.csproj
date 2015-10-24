@@ -134,6 +134,7 @@
     <Compile Include="Controllers\api\BNController.cs" />
     <Compile Include="Controllers\api\PassportController.cs" />
     <Compile Include="Controllers\api\VendorController.cs" />
+    <Compile Include="Controllers\api\WorkController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PSController.cs" />
     <Compile Include="Global.asax.cs">
@@ -176,6 +177,7 @@
     <Content Include="Scripts\App\execinfo.js" />
     <Content Include="Scripts\App\ps.js" />
     <Content Include="Scripts\App\vendor.js" />
+    <Content Include="Scripts\App\work.js" />
     <Content Include="Scripts\backbone.js" />
     <Content Include="Scripts\backbone.marionette.js" />
     <Content Include="Scripts\backbone.marionette.min.js" />

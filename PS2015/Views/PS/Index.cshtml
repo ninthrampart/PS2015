@@ -25,15 +25,6 @@
         startRegion: "#big_papa"
     });
 
-    app.WorkItem = Backbone.Model.extend({
-
-    });
-
-    app.WorkList = Backbone.Collection.extend({
-        model: app.VendorItem,
-        url: "/api/Vendor/Get/123"
-    });
-
     app.addInitializer(function (options) {
 
         //alert("ok");
@@ -62,6 +53,10 @@
         var vendorLisView = new VendorLisView({
             collection: options.vendors
         });
+        //debugger;
+        var internalworkLisView = new InternalWorkLisView({
+            collection: options.works
+        });
 
         var layout = new LayoutView();
         app.startRegion.show(layout);
@@ -73,6 +68,7 @@
         //execInfoCollectionView.render().$el.appendTo("#ps_data");
         execInfoView.render().$el.appendTo("#ps_data");
         vendorLisView.render().$el.appendTo("#ps_data");
+        internalworkLisView.render().$el.appendTo("#ps_data");
     });
 
 
@@ -84,6 +80,7 @@
         app.ps = new app.PS({ id: psId });
         app.bnsumlists = new app.BNSumLists();
         app.vendors = new app.VendorList();
+        app.works = new app.WorkList()
 
         //var complete = _.invoke([app.ps], 'fetch');
 
@@ -108,7 +105,7 @@
 
         //debugger;
         // фетч по 2м коллекциям одновременно - чтобы коллбек зарегистрировать
-        var complete = _.invoke([app.ps, app.bnsumlists, app.vendors], 'fetch');
+        var complete = _.invoke([app.ps, app.bnsumlists, app.vendors, app.works], 'fetch');
 
         
 
@@ -117,7 +114,7 @@
         //фетч завершен
         jQuery.when.apply(jQuery, complete).done(function () {
             //debugger;
-            app.start({ passport: app.ps, bnsumlists: app.bnsumlists, vendors: app.vendors});
+            app.start({ passport: app.ps, bnsumlists: app.bnsumlists, vendors: app.vendors, works: app.works });
 
         });
     });
@@ -458,7 +455,7 @@
 <script type="text/template" id="ps_internalworks">
     <div class="row">
         <div class="col-lg-12">
-            <table id="tbl_ps_vendors" class="table table-hover table-bordered">
+            <table id="tbl_ps_internalworks" class="table table-hover table-bordered">
                 <thead>
                     <tr>
                         <th colspan="9">Работы внутренних ресурсов</th>
@@ -510,14 +507,14 @@
 </script>
 
 <script type="text/template" id="ps_internalwork">
+    <td><%- WorksName %></td>
+    <td><%- Cost %></td>
     <td>-</td>
     <td>-</td>
-    <td>-</td>
-    <td>-</td>
-    <td>-</td>
-    <td>-</td>
-    <td>-</td>
-    <td>-</td>
-    <td>-</td>
+    <td><%- KomCost %></td>
+    <td><%- Marga %></td>
+    <td><%- Marga_Percent %></td>
+    <td><%- BN %></td>
+    <td><%- Comments %></td>
 </script>
 

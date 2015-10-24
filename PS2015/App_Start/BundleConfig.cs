@@ -28,7 +28,8 @@ namespace PS2015
                       "~/Scripts/App/ps.js",
                       "~/Scripts/App/BNSumma.js",
                       "~/Scripts/App/execinfo.js",
-                      "~/Scripts/App/vendor.js"));
+                      "~/Scripts/App/vendor.js",
+                      "~/Scripts/App/work.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
